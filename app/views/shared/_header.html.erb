@@ -1,0 +1,34 @@
+<header>
+  <nav class='navbar bg-base-100'>
+    <%= link_to '/', class: 'btn btn-ghost normal-case text-xl' do %>
+      <%= image_tag('logo.png', height: '40') %>
+    <% end %>
+    <div class="navbar-end">
+      <ul class="menu menu-horizontal p-0">
+        <li tabindex="0">
+          <%= link_to '掲示板', '#', class: 'btn btn-ghost', data: { toggle: 'dropdown' }, aria: { haspopup: 'true', expanded: 'false' } %>
+          <ul class="p-2 bg-base-100">
+            <%= link_to '掲示板一覧', '#', class: 'dropdown-item' %>
+            <%= link_to '掲示板作成', '#', class: 'dropdown-item' %>
+          </ul>
+        </li>
+
+        <li>
+          <%= link_to 'ブックマーク一覧', '#', class: 'btn btn-ghost' %>
+        </li>
+
+        <li tabindex="0">
+          <%= link_to '#', class: 'btn btn-ghost', id: 'header-profile', data: { toggle: 'dropdown' }, aria: { haspopup: 'true', expanded: 'false' } do %>
+            <%= image_tag('sample.jpg', class: 'rounded-full', width: '40', height: '40') %>
+          <% end %>
+          <ul class="p-2 bg-base-100">
+            <li><a class="dropdown-item">らんてっく たろう</a></li>
+            <li class="divider"></li>
+            <%= link_to 'プロフィール', '#', class: 'dropdown-item' %>
+            <%= link_to 'ログアウト', '#', class: 'dropdown-item' %>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
