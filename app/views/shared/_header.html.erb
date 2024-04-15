@@ -1,11 +1,11 @@
 <div class="navbar bg-base-100">
   <div class="flex-1">
-    <a class="btn btn-ghost text-xl">Outspire</a>
+    <%= link_to 'Outspire', root_path, class: "btn btn-ghost text-xl" %>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li><a>新規登録</a></li>
-      <li><a>ログイン</a></li>
+      <li><%= link_to '新規登録', new_user_path, class: "nav-link" %></li>
+      <li><%= link_to 'ログイン', login_path, class: "nav-link" %></li>
       <li>
         <details>
           <summary>
@@ -13,7 +13,7 @@
           </summary>
           <ul class="p-2 bg-base-100 rounded-t-none">
             <li><a>名前</a></li>
-            <li><a>ログアウト</a></li>
+            <%= link_to 'ログアウト', logout_path, class: "nav-link", method: :delete, data: { turbo_method: :delete } %>
           </ul>
         </details>
       </li>
