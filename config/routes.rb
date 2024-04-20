@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'diagnostics/index'
+  get 'diagnostics/show'
+  get 'diagnostics/result'
   root "static_pages#top"
   resources :users, only: %i[new create]
 
