@@ -1,0 +1,3 @@
+class DiagnosisQuestion < ApplicationRecord
+  
+end
