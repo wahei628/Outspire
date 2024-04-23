@@ -1,0 +1,31 @@
+<div class="container mx-auto px-4">
+  <div class="flex justify-center">
+    <div class="w-full max-w-2xl">
+      <h1 class="text-3xl font-bold mb-6"><%= "プロフィール編集" %></h1>
+      <%= form_with model: @user, url: profile_path, method: :put, local: true do |f| %>
+        <%= render 'shared/flash_message', object: f.object %>
+
+        <div class="form-control">
+          <%= f.label :email, class: "label" %>
+          <div class="input-group">
+            <%= f.email_field :email, class: "input input-bordered w-full" %>
+          </div>
+        </div>
+
+        <div class="form-control mt-4">
+          <%= f.label :name, class: "label" %>
+          <div class="input-group">
+            <%= f.text_field :name, class: "input input-bordered w-full" %>
+          </div>
+        </div>
+
+        <div class="form-control mt-6">
+          <%= f.submit "変更", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+      <div class='text-center mt-6'>
+        <%= link_to "ログインページへ", login_path, class: "link link-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
