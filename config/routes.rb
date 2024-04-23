@@ -5,8 +5,10 @@ Rails.application.routes.draw do
   resources :diagnostics, only: %i[show index] do
     collection do
       post 'result'
+      get 'show_result', to: 'diagnostics#show_result'
     end
   end
+
 
   get 'login', to: 'user_sessions#new'
   post 'login', to: 'user_sessions#create'
