@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_17_080220) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_22_081205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_080220) do
     t.string "result_text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "category_id"
     t.index ["diagnosis_question_id"], name: "index_diagnosis_results_on_diagnosis_question_id"
   end
 
@@ -34,8 +35,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_080220) do
     t.boolean "answer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "user_session_id"
     t.index ["diagnosis_question_id"], name: "index_user_answers_on_diagnosis_question_id"
     t.index ["user_id"], name: "index_user_answers_on_user_id"
+    t.index ["user_session_id"], name: "index_user_answers_on_user_session_id"
   end
 
   create_table "users", force: :cascade do |t|
