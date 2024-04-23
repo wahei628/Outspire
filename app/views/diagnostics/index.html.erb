@@ -1,10 +1,18 @@
-<%= form_with url: diagnostics_path, local: true do |form| %>
+<%= form_with url: result_diagnostics_path, local: true, html: { class: "p-4" } do |form| %>
   <% @questions.each do |question| %>
-    <div class="question">
+    <div class="question py-4">
       <%= question.question_text %>
-      <%= form.radio_button :answers, true, name: "answers[#{question.id}]" %> Yes
-      <%= form.radio_button :answers, false, name: "answers[#{question.id}]" %> No
+      <div class="form-control">
+        <label class="label cursor-pointer">
+          <%= form.radio_button :answers, true, name: "answers[#{question.id}]", class: "radio radio-accent" %>
+          <span class="label-text">Yes</span>
+        </label>
+        <label class="label cursor-pointer">
+          <%= form.radio_button :answers, false, name: "answers[#{question.id}]", class: "radio radio-accent" %>
+          <span class="label-text">No</span>
+        </label>
+      </div>
     </div>
   <% end %>
-  <%= form.submit "Submit" %>
+  <%= form.submit "回答", class: "btn btn-accent btn-lg shadow-lg" %>
 <% end %>
