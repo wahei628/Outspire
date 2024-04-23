@@ -12,7 +12,7 @@
             ユーザー
           </summary>
           <ul class="p-2 bg-base-100 rounded-t-none">
-            <li><%= current_user.name %></li>
+            <li><%= link_to current_user.name, profile_path, class: "nav-link" %></li>
             <%= link_to 'ログアウト', logout_path, class: "nav-link", method: :delete, data: { turbo_method: :delete } %>
           </ul>
         </details>
