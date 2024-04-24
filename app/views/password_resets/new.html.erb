@@ -1,0 +1,18 @@
+<div class="container mx-auto px-4">
+  <div class="flex justify-center">
+    <div class="w-full max-w-lg">
+      <h1 class="text-3xl font-bold text-center"><%= "パスワードリセット" %></h1>
+      <%= form_with url: password_resets_path, local: true do |f| %>
+        <div class="form-control w-full max-w-lg">
+          <%= f.label :email, class: "label" %>
+          <div class="input-group">
+            <%= f.email_field :email, class: "input input-bordered w-full" %>
+          </div>
+        </div>
+        <div class="form-control mt-6">
+          <%= f.submit "変更", class: "btn btn-primary w-full" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
