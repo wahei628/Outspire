@@ -86,6 +86,8 @@ GEM
     builder (3.2.4)
     childprocess (5.0.0)
     concurrent-ruby (1.2.3)
+    config (5.4.0)
+      deep_merge (~> 1.2, >= 1.2.1)
     connection_pool (2.4.1)
     crass (1.0.6)
     cssbundling-rails (1.4.0)
@@ -94,6 +96,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    deep_merge (1.2.2)
     drb (2.2.1)
     erubi (1.12.0)
     faraday (2.9.0)
@@ -260,6 +263,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  config
   cssbundling-rails
   debug
   jbuilder
