@@ -1,9 +1,9 @@
 <div class="container mx-auto px-4">
   <div class="flex justify-center">
     <div class="w-full max-w-lg">
-      <h1 class="text-3xl font-bold mb-6 text-center"><%= "テスト1" %></h1>
+      <h1 class="text-3xl font-bold mb-6 text-center"><%= "パスワード変更" %></h1>
       <%= form_with model: @user, url: password_reset_path(@token), method: :patch, local: true do |f| %>
-        <%= render 'shared/error_messages', object: f.object %>
+        <%= render 'shared/flash_message', object: f.object %>
 
         <div class="form-control w-full mb-4">
           <%= f.label :email, class: "label" %>
@@ -23,7 +23,7 @@
         </div>
 
         <div class="form-control w-full">
-          <%= f.submit "テスト2", class: "btn btn-primary w-full" %>
+          <%= f.submit "変更", class: "btn btn-primary w-full" %>
         </div>
       <% end %>
     </div>
