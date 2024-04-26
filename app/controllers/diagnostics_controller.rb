@@ -17,17 +17,26 @@ class DiagnosticsController < ApplicationController
     user_session_id = session[:session_id] || SecureRandom.uuid
     session[:session_id] = user_session_id
 
+    # このセッションIDに紐づく過去の回答を全て削除
+    UserAnswer.where(user_session_id: user_session_id).delete_all
+
+    begin
     if params[:answers].present?
       params[:answers].each do |diagnosis_question_id, value|
         UserAnswer.create!(
           diagnosis_question_id: diagnosis_question_id.to_i,
           answer: value == 'true',
-          user_id: current_user.id
+          user_id: current_user.id,
+          user_session_id: user_session_id # user_session_idを明示的に設定
         )
       end
     end
+    rescue ActiveRecord::RecordInvalid => e
+      flash[:error] = "回答の保存中にエラーが発生しました: #{e.message}"
+      reidrect_to diagnosis_path # 適切なエラーページにリダイレクト
+    end
 
-    redirect_to show_result_diagnostics_path # 結果表示用のパス
+    redirect_to show_result_diagnostics_path(user_session_id: user_session_id) # 結果表示用のパス
   end
 
   private
@@ -36,22 +45,19 @@ class DiagnosticsController < ApplicationController
     answers = UserAnswer.includes(:diagnosis_question).where(user_session_id: user_session_id)
     result_scores = Hash.new(0)
 
-    # 各質問に重みを設定
-    weights = {
-      1 => 2, # 「運動が好きですか？」の質問に重み2を設定
-      2 => 1, # その他の質問には基本的に重み1
-      # 他の質問にも適宜重みを設定
-    }
+
 
     # 回答に基づいてスコアを計算
     answers.each do |answer|
-      question_weight = answer.diagnosis_question.weight || 1  # データベースから重みを取得、未設定の場合は1を使用
+      question_weight = answer.diagnosis_question.weight
       category_id = answer.diagnosis_question.category_id
       result_scores[category_id] += answer.answer ? question_weight : 0
+       puts "Answer: #{answer.answer}, Weight: #{question_weight}, Category: #{category_id}, Score: #{result_scores[category_id]}"
     end
 
     # 最もスコアが高いカテゴリを結果として選択
     best_category_id = result_scores.max_by { |_, score| score}&.first
+    puts "Best Category ID: #{best_category_id}"
     best_result = DiagnosisResult.find_by(category_id: best_category_id)
 
     if best_result
