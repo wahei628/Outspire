@@ -61,9 +61,9 @@ class DiagnosticsController < ApplicationController
     best_result = DiagnosisResult.find_by(category_id: best_category_id)
 
     if best_result
-      { name: best_result.result_text, description: best_result.try(:description) || "No description available" }
+      { name: best_result.result_text, description: best_result.try(:description) }
     else
-      { name: "No conclusive result", description: "No enough data to determine a result" }
+      { name: "結果がありませんでした。" }
     end
   end
 end
