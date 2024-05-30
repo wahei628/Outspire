@@ -9,6 +9,23 @@
     <p class="text-lg text-red-500">診断結果が見つかりませんでした。</p>
   <% end %>
 
+ <h1>診断結果</h1>
+
+<% if @results[:name] %>
+  <p><%= @results[:name] %></p>
+  <p><%= @results[:description] %></p>
+
+  <% if @results[:name].include?("カフェ") %>
+    <%= link_to '探してみる', places_search_path(type: 'cafe'), class: 'btn btn-primary' %>
+  <% elsif @results[:name].include?("映画館") %>
+    <%= link_to '探してみる', places_search_path(type: 'movie_theater'), class: 'btn btn-primary' %>
+  <% elsif @results[:name].include?("バスケ") %>
+    <%= link_to '探してみる', places_search_path(type: 'park'), class: 'btn btn-primary' %>
+  <% end %>
+<% else %>
+  <p class="text-lg text-red-500">診断結果が見つかりませんでした。</p>
+<% end %>
+
   <div>
     <div class="twitter mt-4">
       <%= link_to "https://twitter.com/share?url=#{show_result_diagnostics_url(user_session_id: session[:session_id])}&text=【診断結果】%0a%0a#{@results[:name]}",
