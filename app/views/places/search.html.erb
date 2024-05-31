@@ -91,7 +91,7 @@
 
   <!-- Replace 'YOUR_API_KEY' with your actual Google Maps API key -->
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.dig(:google_maps, :api_key) %>&libraries=places&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=<%= @api_key %>&libraries=places&callback=initMap">
   </script>
 </body>
 </html>
