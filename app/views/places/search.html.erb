@@ -19,6 +19,18 @@
                             end%></h3>
   <div id="map"></div>
   <div id="info"></div>
+  <div class="weather-form">
+      <%= form_with url: show_weather_path, method: :get, class: "form-control" do |form| %>
+        <div class="form-control">
+          <%= form.label :city, '都市名:', class: "label" %>
+          <label class="input-group">
+            <%= form.text_field :city, class: "input input-bordered" %>
+            <%= form.submit '天気を確認しよっか！', class: "btn btn-primary" %>
+          </label>
+        </div>
+      <% end %>
+    </div>
+  </div>
 
   <script>
     function initMap() {
