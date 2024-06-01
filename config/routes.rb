@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   end
 
   get 'places/search', to: 'places#search'
+
+  get 'weather', to: 'weather#index', as: :weather
+  get 'weather/show', to: 'weather#show', as: :show_weather
+
   resource :profile, only: %i[show edit update]
 
   get 'login', to: 'user_sessions#new'
