@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'oauths/oauth'
+  get 'oauths/callback'
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   root "static_pages#top"
