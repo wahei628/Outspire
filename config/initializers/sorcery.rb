@@ -163,9 +163,9 @@ Rails.application.config.sorcery.configure do |config|
   config.google.key = ENV['GOOGLE_CLIENT_ID']
   config.google.secret = ENV['GOOGLE_CLIENT_SECRET']
   # API設定で承認済みのリダイレクトURIとして登録したurlを設定
-  config.google.callback_url = "http://localhost:3000/google_login_api/callback"
+  config.google.callback_url = 'http://localhost:3000/oauth/callback?provider=google'
   # 外部サービスから取得したユーザー情報をUserモデルの指定した属性にマッピング
-  config.google.user_info_mapping = {:email => "email", :username => "name"}
+  config.google.user_info_mapping = {:email => "email", :name => "name"}
   # config.google.scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
   #
   # For Microsoft Graph, the key will be your App ID, and the secret will be your app password/public key.
