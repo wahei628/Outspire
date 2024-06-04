@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'oauths/oauth'
-  get 'oauths/callback'
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   root "static_pages#top"
@@ -18,6 +16,10 @@ Rails.application.routes.draw do
 
   get 'weather', to: 'weather#index', as: :weather
   get 'weather/show', to: 'weather#show', as: :show_weather
+
+  post 'oauth/callback', to: 'oauths#callback'
+  get 'oauth/callback', to: 'oauths#callback'
+  get 'oauth/:provider', to: 'oauths#oauth', as: :auth_at_provider
 
   resource :profile, only: %i[show edit update]
 
