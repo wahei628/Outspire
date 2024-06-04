@@ -10,6 +10,13 @@
     <ul class="menu menu-horizontal p-0">
       <li><%= link_to '新規登録', new_user_path, class: "btn btn-ghost" %></li>
     </ul>
+    <ul class="menu menu-horizontal p-0">
+      <li>
+      <%= link_to auth_at_provider_path(provider: :google), class: "btn btn-ghost" do %>
+        <i class="fa-brands fa-google"></i>
+      <% end %>
+    </li>
+    </ul>
   </div>
 
   <div class="navbar-end">
