@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_02_143027) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_06_035117) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,6 +38,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_143027) do
     t.datetime "updated_at", null: false
     t.integer "category_id"
     t.index ["diagnosis_question_id"], name: "index_diagnosis_results_on_diagnosis_question_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "user_answers", force: :cascade do |t|
@@ -68,6 +77,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_143027) do
   end
 
   add_foreign_key "diagnosis_results", "diagnosis_questions"
+  add_foreign_key "reviews", "users"
   add_foreign_key "user_answers", "diagnosis_questions"
   add_foreign_key "user_answers", "users"
 end
