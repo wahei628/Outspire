@@ -4,6 +4,7 @@ class User < ApplicationRecord
   # ユーザーが提出したすべての回答を関連付ける
   has_many :user_answers, dependent: :destroy
   has_many :authentications, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   accepts_nested_attributes_for :authentications
 

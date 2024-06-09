@@ -1,0 +1,7 @@
+<h1 class="text-2xl font-bold mb-4">タイトル：<%= @review.title %></h1>
+<p class="mb-4">テキスト：<%= @review.content %></p>
+<p class="text-sm text-gray-500">投稿者: <%= @review.user.name %></p>
+
+<%= link_to '編集', edit_review_path(@review), class: "btn btn-secondary" %>
+<%= link_to 'すぐ消す', review_path(@review), data: { turbo_method: :delete, turbo_confirm: '消しますか？'}, class: "btn btn-error ml-2" %>
+<%= link_to '戻る', reviews_path, class: "btn btn-secondary ml-2" %>
