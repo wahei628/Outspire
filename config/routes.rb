@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'reviews/index'
-  get 'reviews/new'
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   root "static_pages#top"
@@ -24,6 +22,8 @@ Rails.application.routes.draw do
   get 'oauth/:provider', to: 'oauths#oauth', as: :auth_at_provider
 
   resource :profile, only: %i[show edit update]
+
+  resources :reviews
 
   get 'login', to: 'user_sessions#new'
   post 'login', to: 'user_sessions#create'
