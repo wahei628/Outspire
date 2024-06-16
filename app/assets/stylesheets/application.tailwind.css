@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+.body {
+  background-color: #E3E3E3; /* customLiteGreenに相当する色 */
+  flex-direction: column;
+  color: #008F7E; /* テキストの色を修正 */
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+.header {
+  width: 100%;
+  background-color: #96CB8E; /* customGreenに相当する色 */
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #96CB8E;
+  color: #008F7E;
+  text-align: center;
+  padding: 1rem;
+}
