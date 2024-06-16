@@ -4,11 +4,11 @@
       <%= question.question_text %>
       <div class="form-control">
         <label class="label cursor-pointer">
-          <%= form.radio_button :answers, true, name: "answers[#{question.id}]", class: "radio radio-accent" %>
+          <%= form.radio_button :answers, true, name: "answers[#{question.id}]", class: "radio radio-primary" %>
           <span class="label-text">Yes</span>
         </label>
         <label class="label cursor-pointer">
-          <%= form.radio_button :answers, false, name: "answers[#{question.id}]", class: "radio radio-accent" %>
+          <%= form.radio_button :answers, false, name: "answers[#{question.id}]", class: "radio radio-primary" %>
           <span class="label-text">No</span>
         </label>
       </div>
