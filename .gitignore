@@ -49,3 +49,5 @@ config/environments/*.local.yml
 /config/credentials/development.key
 
 .DS_Store
+
+/public/uploads
