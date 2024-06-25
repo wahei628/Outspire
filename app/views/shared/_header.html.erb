@@ -6,13 +6,15 @@
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1 flex space-x-4">
         <li><%= link_to 'レビュー', reviews_path, class: "btn btn-ghost" %></li>
-        <li><% if current_user.avatar.present? %>
-              <%= link_to profile_path do %>
-                <%= image_tag current_user.avatar.url(:avatar), size: "40x40", class: "rounded-full" %>
-              <% end %>
-            <% else %>
-              画像がありません
-            <% end %></li>
+        <li>
+          <% if current_user.avatar.present? %>
+            <%= link_to profile_path, class: "btn btn-ghost" do %>
+              <%= image_tag current_user.avatar.url(:avatar), size: "40x40", class: "rounded-full" %>
+            <% end %>
+          <% else %>
+            <%= link_to 'プロフィール', profile_path, class: "btn btn-ghost" %>
+          <% end %>
+        </li>
         <li><%= link_to 'ログアウト', logout_path, class: "btn btn-ghost", method: :delete, data: { turbo_method: :delete } %></li>
       </ul>
     </div>
