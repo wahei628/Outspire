@@ -13,6 +13,9 @@ class ReviewsController < ApplicationController
     @review = Review.new
   end
 
+  def edit
+  end
+
   def create
     @review = current_user.reviews.build(review_params)
     if @review.save
@@ -20,9 +23,6 @@ class ReviewsController < ApplicationController
     else
       render :new
     end
-  end
-
-  def edit
   end
 
   def update
