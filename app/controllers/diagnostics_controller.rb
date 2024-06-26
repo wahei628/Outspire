@@ -50,12 +50,13 @@ class DiagnosticsController < ApplicationController
       question_weight = answer.diagnosis_question.weight
       category_id = answer.diagnosis_question.category_id
       result_scores[category_id] += answer.answer ? question_weight : 0
-      puts "Answer: #{answer.answer}, Weight: #{question_weight}, Category: #{category_id}, Score: #{result_scores[category_id]}"
+      Rails.logger.info "Answer: #{answer.answer}, Weight: #{question_weight}, " \
+                        "Category: #{category_id}, Score: #{result_scores[category_id]}"
     end
 
     # 最もスコアが高いカテゴリを結果として選択
     best_category_id = result_scores.max_by { |_, score| score }&.first
-    puts "Best Category ID: #{best_category_id}"
+    Rails.logger.info "Best Category ID: #{best_category_id}"
     best_result = DiagnosisResult.find_by(category_id: best_category_id)
 
     if best_result
