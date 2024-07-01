@@ -334,6 +334,9 @@ GEM
       bcrypt (~> 3.1)
       oauth (>= 0.6)
       oauth2 (~> 2.0)
+    spring (4.2.1)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -398,6 +401,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   sorcery
+  spring-commands-rspec
   sprockets-rails
   stimulus-rails
   turbo-rails
