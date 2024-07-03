@@ -23,14 +23,14 @@ RSpec.describe User, type: :model do
     it '同じメールアドレスは無効である' do
       create(:user, email: user.email)
       expect(user).not_to be_valid
-      expect(user.errors[:email]).to include("has already been taken")
+      expect(user.errors[:email]).to include('has already been taken')
     end
 
     it 'パスワードが3文字未満は無効である' do
       user.password = '12'
       user.password_confirmation = '12'
       expect(user).not_to be_valid
-      expect(user.errors[:password]).to include("is too short (minimum is 3 characters)")
+      expect(user.errors[:password]).to include('is too short (minimum is 3 characters)')
     end
 
     it 'パスワード確認がない場合は無効である' do
@@ -48,7 +48,7 @@ RSpec.describe User, type: :model do
       create(:user, reset_password_token: 'unique_token')
       user.reset_password_token = 'unique_token'
       expect(user).not_to be_valid
-      expect(user.errors[:reset_password_token]).to include("has already been taken")
+      expect(user.errors[:reset_password_token]).to include('has already been taken')
     end
   end
 
