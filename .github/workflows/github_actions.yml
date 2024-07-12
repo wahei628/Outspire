@@ -19,12 +19,12 @@ jobs:
           - 5432:5432
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: outspire
 
     env:
       RAILS_ENV: test
-    
+
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -48,6 +48,14 @@ jobs:
       - name: Install gems
         run: bundle install --path vendor/bundle --jobs 4
 
+      - name: Check PostgreSQL connection
+        run: |
+          until pg_isready -h localhost -U postgres; do
+            sleep 1
+          done
+        env:
+          PGPASSWORD: password
+
       - name: Setup Database
         run: |
           cp -v config/database.yml.ci config/database.yml
@@ -56,9 +64,10 @@ jobs:
         env:
           RAILS_ENV: test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: password
 
       - name: Run tests
         run: bundle exec rspec
+
       - name: RuboCop
         run: bundle exec rubocop spec/models/
