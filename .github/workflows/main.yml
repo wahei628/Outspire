@@ -1,0 +1,21 @@
+name: Rails CD
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.13.15 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }} #Must be unique in Heroku
+          heroku_email: wahei628@gmail.com
+          usedocker: true
