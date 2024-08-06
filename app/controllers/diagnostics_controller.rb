@@ -18,7 +18,7 @@ class DiagnosticsController < ApplicationController
     session[:session_id] = user_session_id
 
     # このセッションIDに紐づく過去の回答を全て削除
-    UserAnswer.where(user_session_id: user_session_id).delete_all
+    UserAnswer.where(user_session_id:).delete_all
 
     begin
       if params[:answers].present?
@@ -27,7 +27,7 @@ class DiagnosticsController < ApplicationController
             diagnosis_question_id: diagnosis_question_id.to_i,
             answer: value == 'true',
             user_id: current_user&.id,
-            user_session_id: user_session_id
+            user_session_id:
           )
         end
       end
@@ -36,22 +36,22 @@ class DiagnosticsController < ApplicationController
       redirect_to diagnostics_path and return # 適切なエラーページにリダイレクト
     end
 
-    redirect_to show_result_diagnostics_path(user_session_id: user_session_id) # 結果表示用のパス
+    redirect_to show_result_diagnostics_path(user_session_id:) # 結果表示用のパス
   end
 
   private
 
   def calculate_results(user_session_id)
-    answers = UserAnswer.includes(:diagnosis_question).where(user_session_id: user_session_id)
+    answers = UserAnswer.includes(:diagnosis_question).where(user_session_id:)
     result_scores = Hash.new(0)
 
     # 回答に基づいてスコアを計算
     answers.each do |answer|
       points = answer.diagnosis_question.points
-      if answer.answer
-        points.each do |result_key, point|
-          result_scores[result_key] += point
-        end
+      next unless answer.answer
+
+      points.each do |result_key, point|
+        result_scores[result_key] += point
       end
     end
 
