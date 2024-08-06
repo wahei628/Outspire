@@ -1,18 +1,18 @@
 <%= form_with url: result_diagnostics_path, local: true, html: { class: "p-4" } do |form| %>
   <% @questions.each do |question| %>
     <div class="question py-4">
-      <%= question.question_text %>
-      <div class="form-control">
-        <label class="label cursor-pointer">
-          <%= form.radio_button :answers, true, name: "answers[#{question.id}]", class: "radio radio-primary" %>
-          <span class="label-text">Yes</span>
+      <p class="font-bold mb-2"><%= question.question_text %></p>
+      <div class="form-control flex flex-col sm:flex-row items-start">
+        <label class="label cursor-pointer flex items-center mr-4">
+          <%= form.radio_button :answers, true, name: "answers[#{question.id}]", class: "radio radio-primary mr-2" %>
+          <span class="label-text">はい</span>
         </label>
-        <label class="label cursor-pointer">
-          <%= form.radio_button :answers, false, name: "answers[#{question.id}]", class: "radio radio-primary" %>
-          <span class="label-text">No</span>
+        <label class="label cursor-pointer flex items-center">
+          <%= form.radio_button :answers, false, name: "answers[#{question.id}]", class: "radio radio-primary mr-2" %>
+          <span class="label-text">いいえ</span>
         </label>
       </div>
     </div>
   <% end %>
-  <%= form.submit "回答", class: "btn btn-accent btn-lg shadow-lg" %>
+  <%= form.submit "回答", class: "btn btn-accent btn-lg shadow-lg mt-4" %>
 <% end %>

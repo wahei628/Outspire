@@ -4,6 +4,6 @@ class DiagnosisQuestion < ApplicationRecord
   # 各質問には複数のユーザー回答が関連付けられる
   has_many :user_answers, dependent: :destroy
 
-  validates :weight, numericality: { greater_than_or_equal_to: 1 }
-  validates :category_id, presence: true
+  validates :question_text, presence: true
+  validates :points, presence: true
 end
