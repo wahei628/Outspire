@@ -9,33 +9,42 @@
     <p class="text-lg text-red-500">診断結果が見つかりませんでした。</p>
   <% end %>
 
-  <h1>診断結果</h1>
+  <% if @results[:name] %>
+    <p><%= @results[:name] %></p>
+    <p><%= @results[:description] %></p>
 
-<% if @results[:name] %>
-  <p><%= @results[:name] %></p>
-  <p><%= @results[:description] %></p>
-
-  <% if @results[:name].include?("カフェ") %>
-    <%= link_to '探してみる', places_search_path(type: 'cafe'), class: 'btn btn-primary' %>
-  <% elsif @results[:name].include?("映画館") %>
-    <%= link_to '探してみる', places_search_path(type: 'movie_theater'), class: 'btn btn-primary' %>
-  <% elsif @results[:name].include?("バスケ") %>
-    <%= link_to '探してみる', places_search_path(type: 'park'), class: 'btn btn-primary' %>
+    <% if @results[:name].include?("カフェ") %>
+      <%= link_to '探してみる', places_search_path(type: 'cafe'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("映画館") %>
+      <%= link_to '探してみる', places_search_path(type: 'movie_theater'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("公園") %>
+      <%= link_to '探してみる', places_search_path(type: 'park'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("居酒屋") %>
+      <%= link_to '探してみる', places_search_path(type: 'bar'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("図書館") %>
+      <%= link_to '探してみる', places_search_path(type: 'library'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("本屋") %>
+      <%= link_to '探してみる', places_search_path(type: 'book_store'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("動物園") %>
+      <%= link_to '探してみる', places_search_path(type: 'zoo'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("水族館") %>
+      <%= link_to '探してみる', places_search_path(type: 'aquarium'), class: 'btn btn-primary' %>
+    <% elsif @results[:name].include?("ショッピングモール") %>
+      <%= link_to '探してみる', places_search_path(type: 'shopping_mall'), class: 'btn btn-primary' %>
+    <% end %>
+  <% else %>
+    <p class="text-lg text-red-500">診断結果が見つかりませんでした。</p>
   <% end %>
-<% else %>
-  <p class="text-lg text-red-500">診断結果が見つかりませんでした。</p>
-<% end %>
 
   <div>
     <div class="twitter mt-4">
-  <%= link_to "https://twitter.com/share?url=#{show_result_diagnostics_url(user_session_id: session[:session_id])}&text=【診断結果】%0a%0a#{@results[:name]}",
-    target: '_blank', class: "inline-block" do %>
-    <button class="btn flex items-center space-x-2 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded">
-      <i class="fa-brands fa-x-twitter w-4 h-4"></i>
-      <span>結果を共有するの！</span>
-    </button>
-  <% end %>
-</div>
-
+      <%= link_to "https://twitter.com/share?url=#{show_result_diagnostics_url(user_session_id: session[:session_id])}&text=【診断結果】%0a%0a#{@results[:name]}",
+        target: '_blank', class: "inline-block" do %>
+        <button class="btn flex items-center space-x-2 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded">
+          <i class="fa-brands fa-x-twitter w-4 h-4"></i>
+          <span>結果を共有！</span>
+        </button>
+      <% end %>
+    </div>
   </div>
 </div>
