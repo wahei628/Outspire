@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_20_050748) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_02_104228) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,17 +27,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_20_050748) do
     t.string "question_text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "weight", default: 1
-    t.integer "category_id"
+    t.jsonb "points", default: {}
   end
 
   create_table "diagnosis_results", force: :cascade do |t|
-    t.bigint "diagnosis_question_id"
     t.string "result_text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "category_id"
-    t.index ["diagnosis_question_id"], name: "index_diagnosis_results_on_diagnosis_question_id"
+    t.string "key"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -77,7 +74,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_20_050748) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
   end
 
-  add_foreign_key "diagnosis_results", "diagnosis_questions"
   add_foreign_key "reviews", "users"
   add_foreign_key "user_answers", "diagnosis_questions"
   add_foreign_key "user_answers", "users"
