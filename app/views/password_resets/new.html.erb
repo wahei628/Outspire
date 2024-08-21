@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 text-customGreen">
   <div class="flex justify-center">
     <div class="w-full max-w-lg">
       <h1 class="text-3xl font-bold text-center"><%= "パスワードリセット" %></h1>
@@ -6,11 +6,11 @@
         <div class="form-control w-full max-w-lg">
           <%= f.label :email, class: "label" %>
           <div class="input-group">
-            <%= f.email_field :email, class: "input input-bordered w-full" %>
+            <%= f.email_field :email, class: "input input-bordered w-full bg-customGreen text-customWhite" %>
           </div>
         </div>
         <div class="form-control mt-6">
-          <%= f.submit "変更", class: "btn btn-primary w-full" %>
+          <%= f.submit "変更", class: "btn btn-primary w-full text-customWhite" %>
         </div>
       <% end %>
     </div>
