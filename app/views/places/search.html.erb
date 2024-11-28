@@ -18,7 +18,7 @@
                                  'Movie Theaters'
                             when 'park'
                                  'Basketball Courts'
-                            end%></h3>
+                            end %></h3>
   <div id="map"></div>
   <div id="info"></div>
   <div class="weather-form">
@@ -40,13 +40,16 @@
 
   <script>
     function initMap() {
+      // 初期位置を日本に設定
       let map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: {
-          lat: 35.6895,
+          lat: 35.6895, // 日本の東京
           lng: 139.6917
         }
       });
+
+      let currentInfoWindow = null; // **現在表示中のモーダルを保持**
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -55,18 +58,14 @@
             lng: position.coords.longitude
           };
 
-          let infoWindow = new google.maps.Marker({
+          // 現在地を青丸で表示
+          new google.maps.Marker({
             map: map,
             position: pos,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
           });
 
           map.setCenter(pos);
-
-          let infoDiv = document.getElementById('info');
-          infoDiv.innerHTML = '<p>Latitude: ' + pos.lat + '</p>' +
-            '<p>Longitude: ' + pos.lng + '</p>' +
-            '<p>Accuracy: ' + position.coords.accuracy + ' meters</p>';
 
           // Nearby places search
           let service = new google.maps.places.PlacesService(map);
@@ -78,19 +77,36 @@
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               for (let i = 0; i < results.length; i++) {
                 let place = results[i];
+
+                // 検索結果ピンの生成
                 let marker = new google.maps.Marker({
                   map: map,
                   position: place.geometry.location,
-                  title: place.name
+                  title: place.name,
+                  icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // 検索結果ピンを赤色
                 });
 
-                infoDiv.innerHTML += '<p><strong>' + place.name + '</strong><br>' +
-                  'Address: ' + place.vicinity + '<br>' +
-                  'Rating: ' + (place.rating || 'N/A') + '</p>';
+                // **ピンをクリックしたときに詳細を表示**
+                let infoWindow = new google.maps.InfoWindow({
+                  content: `
+                    <div>
+                      <strong>${place.name}</strong><br>
+                      Address: ${place.vicinity}<br>
+                      Rating: ${(place.rating || 'N/A')}<br>
+                    </div>`
+                });
+
+                marker.addListener('click', function() {
+                  // **他のモーダルを閉じる**
+                  if (currentInfoWindow) {
+                    currentInfoWindow.close();
+                  }
+                  currentInfoWindow = infoWindow; // 現在のモーダルを設定
+                  infoWindow.open(map, marker);
+                });
               }
             }
           });
-
         }, function() {
           handleLocationError(true, map.getCenter());
         });
