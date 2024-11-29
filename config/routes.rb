@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root "static_pages#top"
   resources :users, only: %i[new create]
   resources :password_resets, only: %i[new create edit update]
+  resources :favorites, only: [:create, :index, :show]
 
   resources :diagnostics, only: %i[show index] do
     collection do

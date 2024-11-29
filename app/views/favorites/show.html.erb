@@ -1,0 +1,65 @@
+<h1 class="text-2xl font-bold mb-4"><%= @favorite.place_name %></h1>
+<p><strong>住所:</strong> <%= @favorite.place_address %></p>
+<div id="detail-hours" class="mb-4"></div>
+<div id="detail-map" style="height: 400px; width: 100%;" class="mt-4"></div>
+
+<script>
+  function initMap() {
+    const lat = parseFloat("<%= @favorite.place_lat %>");
+    const lng = parseFloat("<%= @favorite.place_lng %>");
+    const name = "<%= @favorite.place_name %>";
+
+    // Initialize map
+    const map = new google.maps.Map(document.getElementById('detail-map'), {
+      zoom: 15,
+      center: {
+        lat,
+        lng
+      },
+    });
+
+    // Add marker
+    const marker = new google.maps.Marker({
+      map: map,
+      position: {
+        lat,
+        lng
+      },
+      title: name,
+    });
+
+    // Fetch place details (e.g., opening hours)
+    const service = new google.maps.places.PlacesService(map);
+    const request = {
+      location: {
+        lat,
+        lng
+      },
+      radius: 50,
+      query: name,
+    };
+
+    service.textSearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results.length > 0) {
+        const placeId = results[0].place_id;
+
+        service.getDetails({
+          placeId: placeId
+        }, (place, detailsStatus) => {
+          if (detailsStatus === google.maps.places.PlacesServiceStatus.OK) {
+            document.getElementById('detail-hours').innerText =
+              place.opening_hours ?
+              `営業時間: ${place.opening_hours.weekday_text.join(', ')}` :
+              '営業時間: 情報なし';
+          } else {
+            document.getElementById('detail-hours').innerText = '営業時間: 情報なし';
+          }
+        });
+      } else {
+        document.getElementById('detail-hours').innerText = '営業時間: 情報なし';
+      }
+    });
+  }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.dig(:google_maps, :api_key) %>&libraries=places&callback=initMap"></script>
