@@ -21,113 +21,120 @@
                             end %></h3>
   <div id="map"></div>
   <div id="info"></div>
-  <div class="weather-form">
-    <%= form_with url: show_weather_path, method: :get, class: "form-control" do |form| %>
-    <div class="form-control">
-      <%= form.label :city, '都市名:', class: "label" %>
-      <label class="input-group">
-        <%= form.text_field :city, class: "input input-bordered" %>
-        <%= form.submit '天気を確認しよっか！', class: "btn btn-primary" %>
-      </label>
-    </div>
-    <% end %>
-  </div>
-  </div>
-
-  <div>
-    <%= link_to '行った場所をレビューしてみよう！', reviews_path, class: 'btn btn-secondary' %>
-  </div>
 
   <script>
     function initMap() {
-      // 初期位置を日本に設定
       let map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: {
-          lat: 35.6895, // 日本の東京
+          lat: 35.6895,
           lng: 139.6917
-        }
+        },
       });
 
-      let currentInfoWindow = null; // **現在表示中のモーダルを保持**
+      let currentInfoWindow = null; // 現在のモーダルを保持
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           let pos = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
 
-          // 現在地を青丸で表示
           new google.maps.Marker({
             map: map,
             position: pos,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
           });
 
           map.setCenter(pos);
 
-          // Nearby places search
           let service = new google.maps.places.PlacesService(map);
           service.nearbySearch({
-            location: pos,
-            radius: 2000,
-            type: ['<%= @type %>']
-          }, function(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              for (let i = 0; i < results.length; i++) {
-                let place = results[i];
+              location: pos,
+              radius: 2000,
+              type: ['<%= @type %>'],
+            },
+            function(results, status) {
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                results.forEach((place) => {
+                  let marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name,
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                  });
 
-                // 検索結果ピンの生成
-                let marker = new google.maps.Marker({
-                  map: map,
-                  position: place.geometry.location,
-                  title: place.name,
-                  icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // 検索結果ピンを赤色
-                });
+                  let infoWindow = new google.maps.InfoWindow();
 
-                // **ピンをクリックしたときに詳細を表示**
-                let infoWindow = new google.maps.InfoWindow({
-                  content: `
-                    <div>
-                      <strong>${place.name}</strong><br>
-                      Address: ${place.vicinity}<br>
-                      Rating: ${(place.rating || 'N/A')}<br>
-                    </div>`
-                });
+                  marker.addListener('click', () => {
+                    // 他のモーダルを閉じる
+                    if (currentInfoWindow) currentInfoWindow.close();
 
-                marker.addListener('click', function() {
-                  // **他のモーダルを閉じる**
-                  if (currentInfoWindow) {
-                    currentInfoWindow.close();
-                  }
-                  currentInfoWindow = infoWindow; // 現在のモーダルを設定
-                  infoWindow.open(map, marker);
+                    infoWindow.setContent(`
+                      <div>
+                        <strong>${place.name}</strong><br>
+                        Address: ${place.vicinity}<br>
+                        Rating: ${(place.rating || 'N/A')}<br>
+                        <button class="favorite-btn" data-name="${place.name}" data-address="${place.vicinity}" data-lat="${place.geometry.location.lat()}" data-lng="${place.geometry.location.lng()}">
+                          お気に入りに追加
+                        </button>
+                      </div>
+                    `);
+                    infoWindow.open(map, marker);
+                    currentInfoWindow = infoWindow;
+                  });
                 });
               }
             }
-          });
-        }, function() {
-          handleLocationError(true, map.getCenter());
+          );
         });
-      } else {
-        handleLocationError(false, map.getCenter());
       }
     }
 
-    function handleLocationError(browserHasGeolocation, pos) {
-      let infoWindow = new google.maps.InfoWindow({
-        map: map,
-        position: pos,
-        content: browserHasGeolocation ?
-          'Error: The Geolocation service failed.' : 'Error: Your browser doesn\'t support geolocation.'
-      });
-    }
+    // お気に入りボタンのクリックイベント
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('favorite-btn')) {
+        const name = e.target.getAttribute('data-name');
+        const address = e.target.getAttribute('data-address');
+        const lat = e.target.getAttribute('data-lat');
+        const lng = e.target.getAttribute('data-lng');
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+        fetch('/favorites', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': csrfToken,
+            },
+            body: JSON.stringify({
+              favorite: {
+                place_name: name,
+                place_address: address,
+                place_lat: lat,
+                place_lng: lng,
+              },
+            }),
+          })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            alert(data.message || 'お気に入りに追加しました！');
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            alert('お気に入りの追加に失敗しました');
+          });
+      }
+    });
   </script>
 
-  <!-- Replace 'YOUR_API_KEY' with your actual Google Maps API key -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.dig(:google_maps, :api_key) %>&libraries=places&callback=initMap">
-  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.dig(:google_maps, :api_key) %>&libraries=places&callback=initMap"></script>
 </body>
 
 </html>
