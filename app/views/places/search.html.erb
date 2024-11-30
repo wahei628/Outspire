@@ -5,20 +5,13 @@
   <title>Nearby Places</title>
   <style>
     #map {
-      height: 400px;
+      height: 80vh;
       width: 100%;
     }
   </style>
 </head>
 
 <body>
-  <h3>Nearby <%= case @type when 'cafe'
-                                 'Cafes'
-                            when 'movie_theater'
-                                 'Movie Theaters'
-                            when 'park'
-                                 'Basketball Courts'
-                            end %></h3>
   <div id="map"></div>
   <div id="info"></div>
 
