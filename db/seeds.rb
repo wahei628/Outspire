@@ -14,12 +14,12 @@ DiagnosisQuestion.create!([
 ])
 
 DiagnosisResult.create!([
-  { result_text: "近くの公園でランニングを楽しむのはどうかな！ストレス解消しよう！", key: "result1" },
-  { result_text: "カフェでゆったりとした休日を過ごそうか！インスタ映えする写真をあげよう！", key: "result2" },
-  { result_text: "今日は家でゆっくりしたほうがいいみたい！たまにはいいよね！", key: "result3" },
-  { result_text: "映画を見て感性深めよう！感想知りたいな！", key: "result4" },
-  { result_text: "居酒屋やバーで飲もうか！昼飲みサイコー！", key: "result5" },
-  { result_text: "今日は本を読んでみよう！図書館や本屋さんへGoGo！", key: "result6" },
-  { result_text: "動物園や水族館に行こうか！イルカのショーやってないかな！", key: "result7" },
-  { result_text: "ショッピングモールに行って買い物しようか！爆買い注意！", key: "result8" }
+  { result_text: "近くの公園でランニングを楽しんでみましょう！", key: "result1" },
+  { result_text: "カフェでゆったりとした休日を過ごしてみましょう！", key: "result2" },
+  { result_text: "今日は家でゆっくりしてみましょう！", key: "result3" },
+  { result_text: "映画を観てみましょう！", key: "result4" },
+  { result_text: "居酒屋やバーでお酒を飲みましょうか！", key: "result5" },
+  { result_text: "図書館や本屋さんでいい本に巡り合いましょう！", key: "result6" },
+  { result_text: "動物園や水族館に行ってみましょう！", key: "result7" },
+  { result_text: "ショッピングモールに行って服や雑貨など買ってみましょう！", key: "result8" }
 ])
