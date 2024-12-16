@@ -9,7 +9,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # コードをチェックアウト
       - uses: actions/checkout@v2
+
+      # Node.js をセットアップ
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Heroku CLI をインストール
+      - name: Install Heroku CLI
+        run: npm install -g heroku
+
+      # Heroku CLI の動作確認
+      - name: Verify Heroku CLI
+        run: heroku --version
+
+      # Heroku Deploy
       - uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
