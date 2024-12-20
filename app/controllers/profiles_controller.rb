@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :set_user, only: %i[edit update]
+  before_action :restrict_guest_user, only: %i[edit update]
 
   def show
   end
@@ -24,5 +25,11 @@ class ProfilesController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :name, :avatar)
+  end
+
+  def restrict_guest_user
+    if current_user.email == 'guest@example.com'
+      redirect_to profile_path, alert: 'ゲストユーザーはプロフィールを編集できません'
+    end
   end
 end
