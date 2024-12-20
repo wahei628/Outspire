@@ -1,5 +1,5 @@
 class UserSessionsController < ApplicationController
-  skip_before_action :require_login, only: %i[new create]
+  skip_before_action :require_login, only: %i[new create guest_login]
 
   def new
   end
@@ -18,5 +18,16 @@ class UserSessionsController < ApplicationController
   def destroy
     logout
     redirect_to root_path, status: :see_other, success: 'ログアウトしました！'
+  end
+
+  def guest_login
+    # 固定のゲストユーザーの場合
+    guest_user = User.find_by(email: 'guest@example.com') # ゲストアカウントのメールアドレス
+    if guest_user
+      auto_login(guest_user) # Sorceryの自動ログイン
+      redirect_to root_path, notice: 'ゲストユーザーとしてログインしました'
+    else
+      redirect_to root_path, alert: 'ゲストログインに失敗しました'
+    end
   end
 end
