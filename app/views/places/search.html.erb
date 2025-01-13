@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Nearby Places</title>
   <style>
@@ -10,73 +9,62 @@
     }
   </style>
 </head>
-
 <body>
   <div id="map"></div>
   <div id="info"></div>
 
   <script>
+    // ページ全体がロードされた後にスクリプトを実行
+    document.addEventListener('DOMContentLoaded', () => {
+      // Google Mapの初期化
+      initMap();
+
+      // イベントデリゲーションを設定
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('favorite-btn')) {
+          handleFavoriteClick(e.target);
+        }
+      });
+    });
+
+    // Google Mapを初期化する関数
     function initMap() {
-      let map = new google.maps.Map(document.getElementById('map'), {
+      const map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
-        center: {
-          lat: 35.6895,
-          lng: 139.6917
-        },
+        center: { lat: 35.6895, lng: 139.6917 },
       });
 
       let currentInfoWindow = null; // 現在のモーダルを保持
 
+      // Geolocationを使用して現在地を取得
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          let pos = {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
 
+          // 現在地マーカーの作成
           new google.maps.Marker({
             map: map,
             position: pos,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+            icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
           });
 
           map.setCenter(pos);
 
-          let service = new google.maps.places.PlacesService(map);
-          service.nearbySearch({
+          // PlacesServiceの使用
+          const service = new google.maps.places.PlacesService(map);
+          service.nearbySearch(
+            {
               location: pos,
               radius: 7000,
               type: ['<%= @type %>'],
             },
-            function(results, status) {
+            (results, status) => {
               if (status === google.maps.places.PlacesServiceStatus.OK) {
                 results.forEach((place) => {
-                  let marker = new google.maps.Marker({
-                    map: map,
-                    position: place.geometry.location,
-                    title: place.name,
-                    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                  });
-
-                  let infoWindow = new google.maps.InfoWindow();
-
-                  marker.addListener('click', () => {
-                    // 他のモーダルを閉じる
-                    if (currentInfoWindow) currentInfoWindow.close();
-
-                    infoWindow.setContent(`
-                      <div>
-                        <strong>${place.name}</strong><br>
-                        Address: ${place.vicinity}<br>
-                        Rating: ${(place.rating || 'N/A')}<br>
-                        <button class="favorite-btn" data-name="${place.name}" data-address="${place.vicinity}" data-lat="${place.geometry.location.lat()}" data-lng="${place.geometry.location.lng()}">
-                          お気に入りに追加
-                        </button>
-                      </div>
-                    `);
-                    infoWindow.open(map, marker);
-                    currentInfoWindow = infoWindow;
-                  });
+                  createPlaceMarker(place, map, service, currentInfoWindow);
                 });
               }
             }
@@ -85,49 +73,107 @@
       }
     }
 
-    // お気に入りボタンのクリックイベント
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('favorite-btn')) {
-        const name = e.target.getAttribute('data-name');
-        const address = e.target.getAttribute('data-address');
-        const lat = e.target.getAttribute('data-lat');
-        const lng = e.target.getAttribute('data-lng');
+    // お気に入りボタンクリック時の処理
+    function handleFavoriteClick(button) {
+      const name = button.getAttribute('data-name');
+      const address = button.getAttribute('data-address');
+      const lat = button.getAttribute('data-lat');
+      const lng = button.getAttribute('data-lng');
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = csrfTokenElement ? csrfTokenElement.content : null;
 
-        fetch('/favorites', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': csrfToken,
-            },
-            body: JSON.stringify({
-              favorite: {
-                place_name: name,
-                place_address: address,
-                place_lat: lat,
-                place_lng: lng,
-              },
-            }),
-          })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          })
-          .then((data) => {
-            alert(data.message || 'お気に入りに追加しました！');
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            alert('お気に入りの追加に失敗しました');
-          });
+      // 必須データが揃っているか確認
+      if (!name || !address || !lat || !lng || !csrfToken) {
+        console.error('データ属性またはCSRFトークンが不足しています。');
+        alert('データが不足しているため、お気に入りに追加できません。');
+        return;
       }
-    });
+
+      // 非同期リクエスト
+      fetch('/favorites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify({
+          favorite: {
+            place_name: name,
+            place_address: address,
+            place_lat: parseFloat(lat),
+            place_lng: parseFloat(lng),
+          },
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('お気に入りの追加に失敗しました。');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          alert(data.message || 'お気に入りに追加しました！');
+        })
+        .catch((error) => {
+          console.error('エラー:', error);
+          alert('お気に入りの追加に失敗しました。');
+        });
+    }
+
+    // マーカーと情報ウィンドウを作成する関数
+    function createPlaceMarker(place, map, service, currentInfoWindow) {
+      const marker = new google.maps.Marker({
+        map: map,
+        position: place.geometry.location,
+        title: place.name,
+        icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+      });
+
+      marker.addListener('click', () => {
+        if (currentInfoWindow) currentInfoWindow.close(); // 他のモーダルを閉じる
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div>Loading...</div>`,
+        });
+
+        infoWindow.open(map, marker);
+        currentInfoWindow = infoWindow;
+
+        service.getDetails(
+          { placeId: place.place_id },
+          (details, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              const address = details.formatted_address.replace(/^日本、?〒?\d{3}-?\d{4}/, '');
+              const photoUrl =
+                details.photos && details.photos.length > 0
+                  ? details.photos[0].getUrl({ maxWidth: 300 })
+                  : '';
+
+              infoWindow.setContent(`
+                <div>
+                  <strong>${details.name}</strong><br>
+                  住所: ${address || 'N/A'}<br>
+                  評価: ${(details.rating || 'N/A')}<br>
+                  ${
+                    photoUrl
+                      ? `<img src="${photoUrl}" alt="${details.name}" style="width: 100%; max-width: 300px; height: auto;" /><br>`
+                      : 'No image available.<br>'
+                  }
+                  <button class="favorite-btn" data-name="${details.name}" data-address="${address}" data-lat="${details.geometry.location.lat()}" data-lng="${details.geometry.location.lng()}">
+                    お気に入りに追加
+                  </button>
+                </div>
+              `);
+            } else {
+              infoWindow.setContent('<div>詳細情報が取得できませんでした。</div>');
+            }
+          }
+        );
+      });
+    }
   </script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_API_KEY'] %>&libraries=places&callback=initMap" async defer></script>
 </body>
-
 </html>
